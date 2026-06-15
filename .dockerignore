@@ -1,0 +1,9 @@
+.git
+.gitignore
+.env
+node_modules
+frontend-vue/node_modules
+frontend-next/node_modules
+frontend-next/.next
+*.md
+.DS_Store
