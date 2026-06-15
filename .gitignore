@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+frontend-vue/node_modules/
+frontend-next/node_modules/
+frontend-next/.next/
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# PHP
+backend/vendor/
+
+# Docker volumes (local)
+postgres_data/
+rabbitmq_data/
