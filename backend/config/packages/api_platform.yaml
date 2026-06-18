@@ -1,0 +1,23 @@
+api_platform:
+    title: TaxInvest API
+    version: 1.0.0
+    defaults:
+        stateless: true
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin']
+    formats:
+        jsonld: ['application/ld+json']
+        json: ['application/json']
+    docs_formats:
+        jsonld: ['application/ld+json']
+        jsonopenapi: ['application/vnd.openapi+json']
+        html: ['text/html']
+    openapi:
+        contact:
+            name: TaxInvest
+    swagger:
+        persist_authorization: true
+        http_auth:
+            JWT:
+                scheme: bearer
+                bearerFormat: JWT

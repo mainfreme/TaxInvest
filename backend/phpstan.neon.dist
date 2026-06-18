@@ -3,3 +3,6 @@ parameters:
     paths:
         - public
         - src
+        - tests
+    excludePaths:
+        - config/reference.php
