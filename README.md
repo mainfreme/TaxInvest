@@ -31,11 +31,36 @@ docker compose up -d --build
 docker compose ps
 ```
 
-## Endpointy testowe (backend)
+## Endpointy testowe (backend Symfony)
 
-- `http://localhost:8080/api/health` — status API
-- `http://localhost:8080/api/db-check` — połączenie z PostgreSQL
-- `http://localhost:8080/api/rabbitmq-check` — połączenie z RabbitMQ
+- `GET http://localhost:8080/api/health` — status API
+- `GET http://localhost:8080/api/db-check` — połączenie z PostgreSQL
+- `GET http://localhost:8080/api/rabbitmq-check` — połączenie z RabbitMQ
+- `POST http://localhost:8080/api/login` — logowanie JWT (`email`, `password`)
+- `POST http://localhost:8080/api/forgot-password` — przypomnienie hasła (`email`)
+- `POST http://localhost:8080/api/contact` — przykład REST + walidacja + kolejka async (wymaga JWT)
+- `GET http://localhost:8080/api/docs` — dokumentacja OpenAPI (Swagger UI)
+- `GET http://localhost:8080/api/users` — lista użytkowników (API Platform, wymaga JWT)
+- `POST http://localhost:8080/api/users` — rejestracja użytkownika (API Platform, publiczny)
+
+### Inicjalizacja backendu (pierwsze uruchomienie)
+
+```bash
+docker compose up -d --build
+docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
+docker compose exec php php bin/console lexik:jwt:generate-keypair --skip-if-exists
+docker compose exec php php bin/console app:create-user --email=admin@taxinvest.local --password=secret
+docker compose exec php php bin/console messenger:setup-transports
+docker compose exec -d php php bin/console messenger:consume async -vv
+```
+
+Logowanie JWT:
+
+```bash
+curl -s -X POST http://localhost:8080/api/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"admin@taxinvest.local","password":"secret"}'
+```
 
 ## Frontendy
 
@@ -51,6 +76,23 @@ docker compose ps
 ## Przydatne komendy
 
 ```bash
+# QA backend (Composer)
+cd backend && composer qa          # cs-check + phpstan + phpunit
+cd backend && composer cs-fix      # napraw styl kodu
+cd backend && composer cs-check    # sprawdź styl kodu
+cd backend && composer phpstan     # analiza statyczna
+cd backend && composer test        # testy PHPUnit
+
+# QA backend (skrypty shell)
+cd backend && ./scripts/qa.sh
+cd backend && ./scripts/cs-fix.sh
+cd backend && ./scripts/cs-check.sh
+cd backend && ./scripts/phpstan.sh
+cd backend && ./scripts/phpunit.sh
+
+# W Dockerze
+docker compose exec php composer qa
+
 # Logi wszystkich serwisów
 docker compose logs -f
 
@@ -73,7 +115,7 @@ docker compose exec postgres psql -U taxinvest -d taxinvest
 ## Struktura projektu
 
 ```
-├── backend/           # PHP 8.4 API
+├── backend/           # Symfony 8 API (API Platform, JWT, Messenger, Validator)
 ├── frontend-vue/      # Vue 3 + Vite
 ├── frontend-next/     # Next.js 15 (React)
 ├── docker/

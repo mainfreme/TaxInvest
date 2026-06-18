@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
-    ->exclude('vendor');
+    ->exclude('vendor')
+    ->exclude('var')
+    ->exclude('.phpunit.cache');
 
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
