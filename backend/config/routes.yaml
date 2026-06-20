@@ -7,3 +7,9 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+currency_rates_controllers:
+    resource:
+        path: ../src/CurrencyRates/Infrastructure/Http/Controller/
+        namespace: App\CurrencyRates\Infrastructure\Http\Controller
+    type: attribute

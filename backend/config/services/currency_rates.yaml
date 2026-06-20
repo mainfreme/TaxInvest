@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\CurrencyRates\:
+        resource: '../src/CurrencyRates/'
+
+    App\CurrencyRates\Domain\Repository\CurrencyRateRepositoryInterface:
+        alias: App\CurrencyRates\Infrastructure\Persistence\DoctrineCurrencyRateRepository
+
+    App\CurrencyRates\Infrastructure\Http\Controller\CurrencyRateController:
+        tags: ['controller.service_arguments']
