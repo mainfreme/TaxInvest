@@ -1,6 +1,7 @@
 framework:
     messenger:
         failure_transport: failed
+        default_bus: command.bus
 
         buses:
             command.bus:
@@ -19,15 +20,35 @@ framework:
                         type: direct
                     queues:
                         messages: ~
+            import_orchestrator:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: import_orchestrator
+                        type: direct
+                    queues:
+                        import_orchestrator: ~
+            import_chunks:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: import_chunks
+                        type: direct
+                    queues:
+                        import_chunks: ~
             failed: 'doctrine://default?queue_name=failed'
             sync: 'sync://'
 
         routing:
             'App\Message\AsyncExampleMessage': async
+            'App\DataImport\Application\Message\StartImportMessage': import_orchestrator
+            'App\DataImport\Application\Message\ProcessImportChunkMessage': import_chunks
 
 when@test:
     framework:
         messenger:
             transports:
                 async: 'in-memory://'
+                import_orchestrator: 'in-memory://'
+                import_chunks: 'in-memory://'
                 failed: 'in-memory://'

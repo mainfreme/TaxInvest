@@ -7,13 +7,20 @@ RUN apk add --no-cache \
     rabbitmq-c-dev \
     linux-headers \
     git \
-    unzip
+    unzip \
+    libzip-dev \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev
 
-RUN docker-php-ext-install \
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install \
     intl \
     opcache \
     pdo_pgsql \
-    pgsql
+    pgsql \
+    zip \
+    gd
 
 RUN pecl install amqp \
     && docker-php-ext-enable amqp

@@ -26,6 +26,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/CurrencyRates/Infrastructure/Persistence/Doctrine/Entity'
                 prefix: 'App\CurrencyRates\Infrastructure\Persistence\Doctrine\Entity'
                 alias: CurrencyRates
+            DataImport:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/DataImport/Infrastructure/Persistence/Doctrine/Entity'
+                prefix: 'App\DataImport\Infrastructure\Persistence\Doctrine\Entity'
+                alias: DataImport
 
 when@test:
     doctrine:

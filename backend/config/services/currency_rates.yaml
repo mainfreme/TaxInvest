@@ -4,7 +4,7 @@ services:
         autoconfigure: true
 
     App\CurrencyRates\:
-        resource: '../src/CurrencyRates/'
+        resource: '../../src/CurrencyRates/'
 
     App\CurrencyRates\Domain\Repository\CurrencyRateRepositoryInterface:
         alias: App\CurrencyRates\Infrastructure\Persistence\DoctrineCurrencyRateRepository

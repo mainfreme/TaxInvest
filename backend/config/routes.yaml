@@ -13,3 +13,9 @@ currency_rates_controllers:
         path: ../src/CurrencyRates/Infrastructure/Http/Controller/
         namespace: App\CurrencyRates\Infrastructure\Http\Controller
     type: attribute
+
+data_import_controllers:
+    resource:
+        path: ../src/DataImport/Infrastructure/Http/Controller/
+        namespace: App\DataImport\Infrastructure\Http\Controller
+    type: attribute

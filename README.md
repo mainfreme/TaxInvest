@@ -43,6 +43,32 @@ docker compose ps
 - `GET http://localhost:8080/api/users` — lista użytkowników (API Platform, wymaga JWT)
 - `POST http://localhost:8080/api/users` — rejestracja użytkownika (API Platform, publiczny)
 
+## Moduł DataImport
+
+Import plików XLS/XLSX/CSV (np. wyciąg eToro) przez HTTP. Orkiestrator na RabbitMQ dzieli plik na chunki po 50 wierszy i wysyła je do osobnych workerów.
+
+![Architektura przepływu DataImport](backend/src/DataImport/docs/architecture-flow.jpg)
+
+- `POST http://localhost:8080/api/imports` — upload pliku (JWT)
+- `GET http://localhost:8080/api/imports/{id}` — status importu
+
+Szczegóły modułu: [backend/src/DataImport/README.md](backend/src/DataImport/README.md)
+
+Workerzy importu (RabbitMQ):
+
+```bash
+docker compose exec php php bin/console messenger:setup-transports
+docker compose exec -d php php bin/console messenger:consume import_orchestrator -vv
+docker compose exec -d php php bin/console messenger:consume import_chunks -vv
+```
+
+Migracja modułu DataImport:
+
+```bash
+docker compose exec php php bin/console doctrine:migrations:migrate \
+  --namespace='App\DataImport\Infrastructure\Persistence\Migrations' --no-interaction
+```
+
 ### Inicjalizacja backendu (pierwsze uruchomienie)
 
 ```bash

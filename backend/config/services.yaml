@@ -10,6 +10,7 @@ parameters:
 
 imports:
     - { resource: services/currency_rates.yaml }
+    - { resource: services/data_import.yaml }
 
 services:
     # default configuration for services in *this* file
@@ -21,6 +22,9 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
+        exclude:
+            - '../src/CurrencyRates/'
+            - '../src/DataImport/'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
