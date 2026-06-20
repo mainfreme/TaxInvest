@@ -1,0 +1,28 @@
+sequenceDiagram
+    participant API as ImportController
+    participant Storage as ImportFileStorage
+    participant DB as ImportJobRepository
+    participant OrchQ as RabbitMQ_orchestrator
+    participant Orch as StartImportHandler
+    participant Splitter as ImportChunkSplitter
+    participant ChunkQ as RabbitMQ_chunks
+    participant Worker as ProcessImportChunkHandler
+    participant Repo as EtoroRepositories
+
+    API->>Storage: zapis pliku XLS/CSV
+    API->>DB: ImportJob status=pending
+    API->>OrchQ: StartImportMessage
+    API-->>API: 202 importJobId
+
+    OrchQ->>Orch: consume
+    Orch->>Orch: wykryj format + odczyt 3 arkuszy eToro
+    loop per sheet chunk 50 rows
+        Orch->>Splitter: split(rows, 50)
+        Orch->>ChunkQ: ProcessImportChunkMessage
+    end
+    Orch->>DB: status=processing totalChunks
+
+    ChunkQ->>Worker: consume chunk N
+    Worker->>Repo: upsert wiersze arkusza
+    Worker->>DB: increment processedChunks
+    Worker->>DB: status=completed when done

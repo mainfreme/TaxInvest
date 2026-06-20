@@ -1,0 +1,46 @@
+parameters:
+    data_import.storage_dir: '%kernel.project_dir%/var/imports'
+    data_import.chunk_size: 50
+    data_import.max_file_size: 20971520
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\DataImport\:
+        resource: '../../src/DataImport/'
+        exclude:
+            - '../../src/DataImport/Domain/Model/'
+            - '../../src/DataImport/Domain/ValueObject/'
+
+    App\DataImport\Domain\Repository\ImportJobRepositoryInterface:
+        alias: App\DataImport\Infrastructure\Persistence\DoctrineImportJobRepository
+
+    App\DataImport\Domain\Repository\EtoroClosedPositionRepositoryInterface:
+        alias: App\DataImport\Infrastructure\Persistence\DoctrineEtoroClosedPositionRepository
+
+    App\DataImport\Domain\Repository\EtoroAccountActivityRepositoryInterface:
+        alias: App\DataImport\Infrastructure\Persistence\DoctrineEtoroAccountActivityRepository
+
+    App\DataImport\Domain\Repository\EtoroDividendRepositoryInterface:
+        alias: App\DataImport\Infrastructure\Persistence\DoctrineEtoroDividendRepository
+
+    App\DataImport\Application\Service\ImportFileReaderInterface:
+        alias: App\DataImport\Infrastructure\Reader\EtoroStatementImportFileReader
+
+    App\DataImport\Infrastructure\File\ImportFileStorageInterface:
+        alias: App\DataImport\Infrastructure\File\LocalImportFileStorage
+
+    App\DataImport\Infrastructure\File\LocalImportFileStorage:
+        arguments:
+            $storageDir: '%data_import.storage_dir%'
+
+    App\DataImport\Application\Service\ImportChunkSplitter:
+        arguments:
+            $chunkSize: '%data_import.chunk_size%'
+
+    App\DataImport\Infrastructure\Http\Controller\ImportController:
+        arguments:
+            $maxFileSize: '%data_import.max_file_size%'
+        tags: ['controller.service_arguments']
