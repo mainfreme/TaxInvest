@@ -2,6 +2,14 @@ framework:
     messenger:
         failure_transport: failed
 
+        buses:
+            command.bus:
+                middleware:
+                    - validation
+            query.bus:
+                middleware:
+                    - validation
+
         transports:
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'

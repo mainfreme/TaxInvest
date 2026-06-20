@@ -1,0 +1,3 @@
+doctrine_migrations:
+    migrations_paths:
+        'App\CurrencyRates\Infrastructure\Persistence\Migrations': '%kernel.project_dir%/src/CurrencyRates/Infrastructure/Persistence/Migrations'

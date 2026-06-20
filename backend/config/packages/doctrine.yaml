@@ -20,6 +20,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+            CurrencyRates:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/CurrencyRates/Infrastructure/Persistence/Doctrine/Entity'
+                prefix: 'App\CurrencyRates\Infrastructure\Persistence\Doctrine\Entity'
+                alias: CurrencyRates
 
 when@test:
     doctrine:
