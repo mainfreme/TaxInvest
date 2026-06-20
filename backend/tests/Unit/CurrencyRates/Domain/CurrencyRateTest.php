@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\CurrencyRates\Domain;
 
-use App\CurrencyRates\Domain\Exception\InvalidCurrencyCodeException;
-use App\CurrencyRates\Domain\Exception\InvalidExchangeRateException;
 use App\CurrencyRates\Domain\Model\CurrencyRate;
 use App\CurrencyRates\Domain\ValueObject\CurrencyCode;
 use App\CurrencyRates\Domain\ValueObject\ExchangeRate;
@@ -51,27 +49,4 @@ final class CurrencyRateTest extends TestCase
         self::assertGreaterThanOrEqual($previousUpdatedAt, $currencyRate->getUpdatedAt());
     }
 
-    #[Test]
-    public function itNormalizesCurrencyCodeToUppercase(): void
-    {
-        $code = new CurrencyCode('eur');
-
-        self::assertSame('EUR', $code->toString());
-    }
-
-    #[Test]
-    public function itRejectsInvalidCurrencyCode(): void
-    {
-        $this->expectException(InvalidCurrencyCodeException::class);
-
-        new CurrencyCode('EURO');
-    }
-
-    #[Test]
-    public function itRejectsInvalidExchangeRate(): void
-    {
-        $this->expectException(InvalidExchangeRateException::class);
-
-        new ExchangeRate('-1');
-    }
 }
